@@ -174,7 +174,8 @@ const PublishARide = () => {
             Car Per Seat Price
           </legend>
           <input
-            type="text"
+            type="number"
+            min={100}
             className="input input-primary w-full"
             placeholder="Ride Car Per Seat Price"
             value={ride?.pricePerSeat}
