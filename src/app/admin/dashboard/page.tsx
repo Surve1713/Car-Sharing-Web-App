@@ -24,13 +24,27 @@ export default function Dashboard() {
   }, []);
 
   const handleApprove = async (id: string, status: boolean) => {
-    const res = axios.get(`/api/user/approve?id=${id}&status=${status}`);
-    toast.promise(res, {
+    const resPromise = axios.get(`/api/user/approve?id=${id}&status=${status}`);
+    toast.promise(resPromise, {
       loading: `${status ? "Approving" : "Rejecting"} User...`,
       success: `User ${status ? "Approved" : "Rejected"}.`,
       error: "Something went wrong!!",
     });
+
+    try {
+      await resPromise;
+      // Update the user's verification status locally
+      setUsers((prevUsers) =>
+        {
+          return prevUsers.map((user) => user._id === id ? { ...user, isVerified: status } : user
+          );
+        }
+      );
+    } catch (error) {
+      console.error("Approval error", error);
+    }
   };
+
   return (
     <>
       <h1 className="text-4xl font-bold mb-6 text-center uppercase">
@@ -81,9 +95,9 @@ export default function Dashboard() {
           <div className="stat-desc text-secondary">31 tasks remaining</div>
         </div>
       </div>
+
       <div className="overflow-x-auto mt-6 rounded-box border border-base-content/5 bg-base-300">
         <table className="table">
-          {/* head */}
           <thead>
             <tr>
               <th>#</th>
@@ -95,7 +109,6 @@ export default function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {/* row 1 */}
             {users.map((user: User, index) => (
               <tr key={index}>
                 <th>{index + 1}</th>
@@ -125,24 +138,24 @@ export default function Dashboard() {
                 </td>
                 <th>
                   {user.isVerified ? (
-                    <button
-                      className="btn btn-error"
-                      onClick={() => {
-                        handleApprove(user._id, false);
-                      }}
-                    >
-                      Reject
+                    <button className="btn btn-disabled cursor-default">
+                      Approved
                     </button>
                   ) : (
                     <button
                       className="btn btn-success"
-                      onClick={() => {
-                        handleApprove(user._id, true);
-                      }}
+                      onClick={() => handleApprove(user._id, true)}
                     >
                       Approve
                     </button>
                   )}
+                  <button
+                    className="btn bg-red-400 ml-2"
+                    onClick={() => handleApprove(user._id, false)}
+                    disabled={!user.isVerified}
+                  >
+                    Reject
+                  </button>
                 </th>
               </tr>
             ))}

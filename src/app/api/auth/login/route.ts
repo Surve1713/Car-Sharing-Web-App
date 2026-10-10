@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
       message: "Login Success",
       success: true,
       route: `/user/dashboard`,
+      // route: `/`
       user,
     });
     setTokenCookie(response, token);

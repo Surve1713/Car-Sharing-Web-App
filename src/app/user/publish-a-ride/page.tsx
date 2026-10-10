@@ -6,6 +6,11 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 const PublishARide = () => {
+
+  const getTodayDate = () => {
+  const today = new Date();
+  return today.toISOString().split("T")[0]; // Returns format "YYYY-MM-DD"
+};
   const { user } = useUser();
   const [ride, setRide] = useState<Ride>({
     title: "",
@@ -76,7 +81,8 @@ const PublishARide = () => {
             type="date"
             className="input input-primary w-full"
             placeholder="Ride Date"
-            value={ride?.date}
+            min={getTodayDate()} // disables past dates
+            value={ride?.date ? new Date(ride.date).toISOString().split("T")[0] : ""}
             onChange={(e) => {
               setRide({ ...ride, date: e.target.value });
             }}

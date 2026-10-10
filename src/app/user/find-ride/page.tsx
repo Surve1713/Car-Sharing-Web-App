@@ -7,11 +7,13 @@ import toast from "react-hot-toast";
 const FindRidePage = () => {
   const [rides, setRides] = useState<Ride[]>([]);
   const [filteredRides, setFilteredRides] = useState<Ride[]>([]);
+  const [bookedRides, setBookedRides] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     from: "",
     to: "",
     date: "",
   });
+  console.log("Bookked slot ia: ",bookedRides.length)
 
   const fetchRides = async () => {
     try {
@@ -44,13 +46,22 @@ const FindRidePage = () => {
     setFilteredRides(filtered);
   };
 
-  const book = (rideId: string) => {
-    const res = axios.post("/api/requests", { rideId });
-    toast.promise(res, {
-      loading: "Booking...",
-      success: "Booked successfully",
-      error: "Failed to book",
-    });
+  const book = async (rideId: string) => {
+    if (bookedRides.includes(rideId)) return;
+
+    try {
+      await toast.promise(
+        axios.post("/api/requests", { rideId }),
+        {
+          loading: "Booking...",
+          success: "Booked successfully",
+          error: "Failed to book",
+        }
+      );
+      setBookedRides((prev) => [...prev, rideId]);
+    } catch (error) {
+      console.error("Booking error:", error);
+    }
   };
 
   return (
@@ -73,14 +84,12 @@ const FindRidePage = () => {
           value={formData.to}
           onChange={(e) => setFormData({ ...formData, to: e.target.value })}
         />
-
         <input
           type="date"
           className="input input-primary w-full"
           value={formData.date}
           onChange={(e) => setFormData({ ...formData, date: e.target.value })}
         />
-
         <button onClick={searchRides} className="btn btn-primary">
           Search
         </button>
@@ -96,7 +105,7 @@ const FindRidePage = () => {
               >
                 <figure className="relative">
                   <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1dzAY9vxSYgd7Zz6Aji9j2-LaG3-BF5iw5w&s"
+                    src="https://static.vecteezy.com/system/resources/previews/008/561/510/original/simple-icon-modern-sign-car-silhouette-on-background-front-view-car-icon-vehicle-inspiration-editable-eps10-free-vector.jpg"
                     alt="Ride"
                     className="rounded-t-lg w-full h-48 object-cover"
                   />
@@ -105,12 +114,10 @@ const FindRidePage = () => {
                   </span>
                 </figure>
 
-                {/* Ride Details */}
                 <div className="card-body p-4">
                   <h2 className="card-title text-lg font-semibold">
                     {ride.title}
                   </h2>
-
                   <p className="text-sm text-base-content/60">
                     <strong>From:</strong> {ride.from} → <strong>To:</strong>{" "}
                     {ride.to}
@@ -124,17 +131,17 @@ const FindRidePage = () => {
                   </p>
                   <p className="text-sm text-base-content/60">
                     <strong>Seats Available:</strong>{" "}
-                    {ride.car.capacity - ride.passengers.length}
+                    {/* {ride.car.capacity - ride.passengers.length} */}
+                    {ride.car.capacity - bookedRides.length}
+                    {/* {bookedRides.length} */}
                   </p>
                   <p className="text-sm text-base-content/60">
                     <strong>Car Name:</strong> {ride.car.name}
                   </p>
                 </div>
 
-                {/* Divider */}
                 <div className="border-t border-base-content mx-4"></div>
 
-                {/* Organizer Info */}
                 <div className="flex items-center p-4 space-x-3">
                   <img
                     src={ride.organiser?.profileImage}
@@ -151,13 +158,19 @@ const FindRidePage = () => {
                   </div>
                 </div>
 
-                {/* Book Button */}
                 <div className="card-actions px-4 pb-4">
                   <button
-                    className="btn btn-primary w-full text-lg font-medium"
+                    className={`btn w-full text-lg font-medium ${
+                      bookedRides.includes(ride._id)
+                        ? "btn-success cursor-default"
+                        : "btn-primary"
+                    }`}
                     onClick={() => book(ride._id!)}
+                    disabled={bookedRides.includes(ride._id)}
                   >
-                    🚗 Book Now
+                    {bookedRides.includes(ride._id)
+                      ? "✅ Booked"
+                      : "🚗 Book Now"}
                   </button>
                 </div>
               </div>
@@ -174,3 +187,4 @@ const FindRidePage = () => {
 };
 
 export default FindRidePage;
+ 

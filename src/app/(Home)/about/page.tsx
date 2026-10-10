@@ -16,7 +16,7 @@ const About = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Image Section */}
         <img
-          src="/tribute.png"
+          src="https://img.freepik.com/premium-vector/car-with-woman-driver-inside-person-driving-automobile-with-open-window-side-view-happy-auto-owner-rider-enjoying-ride-profile-flat-vector-illustration-isolated-white-background_198278-15592.jpg"
           alt="About TributeConnect"
           className="rounded-lg shadow-lg h-96 object-cover mx-auto"
         />

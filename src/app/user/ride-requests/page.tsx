@@ -36,7 +36,7 @@ const RideRequestsPage = () => {
               <th>Ride</th>
               <th>Passenger</th>
               <th>Status</th>
-              <th>View Passenger</th>
+              {/* <th>View Passenger</th> */}
               <th>Payment Status</th>
             </tr>
           </thead>
@@ -56,17 +56,18 @@ const RideRequestsPage = () => {
                         onClick={handleApprove(booking._id)}
                       >
                         Appove
+                        {/* <button className="btn btn-danger">Reject</button> */}
                       </button>
                     )}
                   </td>
-                  <td>
+                  {/* <td>
                     <Link
                       href={`/user/profile?id=${booking.user._id}`}
                       className="btn btn-primary"
                     >
                       View Passenger
                     </Link>
-                  </td>
+                  </td> */}
                   <td>
                     {booking.payment ? (
                       <span className="text-green-500">Paid</span>

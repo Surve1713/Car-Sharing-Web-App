@@ -36,6 +36,7 @@ export default function Dashboard() {
           <div className="stat-figure text-secondary">
             <IconClock size={40} />
           </div>
+          
           <div className="stat-title">Total Pending Investigation</div>
           <div className="stat-value text-secondary">2.6M</div>
           <div className="stat-desc">21% more than last month</div>

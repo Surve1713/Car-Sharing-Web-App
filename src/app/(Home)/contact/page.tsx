@@ -43,7 +43,7 @@ const Contact = () => {
 
         <div className="w-full">
           <img
-            src="/contactus.png"
+            src="https://wallpaperaccess.com/full/3124617.jpg"
             alt="Contact Us"
             className="rounded-lg mx-auto shadow-lg mb-6 h-80"
           />
